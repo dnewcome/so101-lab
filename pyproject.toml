@@ -3,7 +3,7 @@ name = "so101-lab"
 version = "0.1.0"
 description = "Tools and experiments for SO-101 arms: bring-up, calibration, multi-arm coordination, and STEP-based positioning. Built on lerobot (dependency, not a fork)."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"  # lerobot requires >=3.12
 license = { text = "MIT" }
 authors = [{ name = "Dan Newcome" }]
 dependencies = [
