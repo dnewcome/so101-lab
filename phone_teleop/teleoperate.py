@@ -17,6 +17,9 @@ import os
 import sys
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # phone_teleop/ on path
+import _hebi_stub  # noqa: F401,E402  -- MUST precede any lerobot.teleoperators.phone import
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lerobot.model.kinematics import RobotKinematics

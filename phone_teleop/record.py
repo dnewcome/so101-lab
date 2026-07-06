@@ -18,6 +18,9 @@ episodes advance on the EPISODE_TIME_SEC timer (same as lerobot-record here).
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # phone_teleop/ on path
+import _hebi_stub  # noqa: F401,E402  -- MUST precede any lerobot.teleoperators.phone import
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lerobot.cameras.opencv import OpenCVCameraConfig

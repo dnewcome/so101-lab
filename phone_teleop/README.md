@@ -82,3 +82,8 @@ EE→IK pipeline with the trained policy in the loop.
 - **Motion inverted / axes swapped:** flip signs in lerobot's
   `MapPhoneActionToRobotAction`, or adjust `end_effector_step_sizes`.
 - **Not discovered / no pose:** confirm PC and Quest are on the same network.
+- **`hebi-py` / "HEBI Core library not found":** lerobot's phone teleop guards on
+  `hebi-py` (only the iOS path uses it). We install it and stub the native module
+  in `_hebi_stub.py` (imported first in `teleoperate.py`/`record.py`). If you
+  write your own phone script, `import _hebi_stub` before importing
+  `lerobot.teleoperators.phone`.
