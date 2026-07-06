@@ -80,10 +80,27 @@ war-story writeup in [`docs/SO101_BRINGUP.md`](docs/SO101_BRINGUP.md).
   `cad_to_robot()` placeholder for the CAD-frame → robot-base transform you
   calibrate once per table setup. Feeds waypoints into `trace_path.py`.
 
+- **`vr_teleop.py` + `sim_backend.py`** — **bimanual VR teleop**, sim-first.
+  Two Quest 2 controllers → per-hand clutch → shared IK (`ik.py`) → two SO-101
+  arms in **MuJoCo** (`sim_backend.py`, two arms via `MjSpec` attach) or two real
+  `SOFollower`s. Pose source (mock ↔ oculus_reader) and backend (sim ↔ hardware)
+  are one-line swaps. Develop with no headset via the mock source:
+
+  ```bash
+  uv sync --extra kin --extra sim
+  uv run python sim_backend.py            # self-test: both arms track IK
+  uv run python vr_teleop.py --iters 240  # mock controllers drive both sim arms
+  uv run python vr_teleop.py --view       # MuJoCo viewer
+  ```
+
+  Full writeup + Quest sideload + hardware steps: **[`docs/VR_TELEOP.md`](docs/VR_TELEOP.md)**.
+
+- **`ik.py`** — shared placo FK/IK (iterated to convergence), used by both
+  `trace_path.py` and `vr_teleop.py` so sim and hardware use one solver.
+
 - **`multiarm.py`** — a `MultiArm` wrapper that connects several `SOFollower`
-  arms and reads/commands them together. The building block for tasks where one
-  arm holds a part while another works on it. (lerobot also ships a stock
-  `bi_so_follower` bimanual robot if you want the built-in record/train path.)
+  arms and reads/commands them together. The hardware backend for `vr_teleop`.
+  (lerobot also ships a stock `bi_so_follower` bimanual robot.)
 
 These are honest starting points, not finished features. **Note the SO-101 is a
 5-DOF arm** — great for position-primary tracing (pen/nozzle/hold), not full

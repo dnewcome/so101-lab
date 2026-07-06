@@ -33,29 +33,11 @@ import time
 
 import numpy as np
 
-from lerobot.model.kinematics import RobotKinematics
-
-from so101_config import ARM_JOINTS, FOLLOWER_ID, FOLLOWER_PORT, URDF_PATH, URDF_TARGET_FRAME
+from ik import load_kin, solve_ik
+from so101_config import ARM_JOINTS, FOLLOWER_ID, FOLLOWER_PORT
 
 # A comfortable, non-singular "ready" seed (degrees), arm reaching out front.
 SEED_DEG = np.array([0.0, -35.0, 45.0, -10.0, 0.0, 0.0])
-
-
-def solve_ik(kin, q_seed, T, iters=120, tol_mm=0.3, orientation_weight=0.0):
-    """Iterate lerobot's single-step differential IK to convergence.
-
-    orientation_weight is deliberately low by default: on a 5-DOF arm you can't
-    hold a full 6-DOF orientation across a workspace, so we prioritize *position*
-    (pen/nozzle that may tilt) and report the orientation drift separately. Raise
-    it if your task needs tighter tool orientation (at the cost of reach)."""
-    q = np.array(q_seed, dtype=float)
-    err = float("inf")
-    for _ in range(iters):
-        q = kin.inverse_kinematics(q, T, position_weight=1.0, orientation_weight=orientation_weight)
-        err = np.linalg.norm(kin.forward_kinematics(q)[:3, 3] - T[:3, 3]) * 1000.0
-        if err < tol_mm:
-            break
-    return q, err
 
 
 def _orient_err_deg(R_a, R_b):
@@ -181,9 +163,9 @@ def main() -> int:
     args = ap.parse_args()
 
     try:
-        kin = RobotKinematics(URDF_PATH, target_frame_name=URDF_TARGET_FRAME)
+        kin = load_kin()
     except Exception as e:
-        print(f"Could not load kinematics from {URDF_PATH}\n  {type(e).__name__}: {e}")
+        print(f"Could not load kinematics: {type(e).__name__}: {e}")
         print("Run ./fetch_urdf.sh (URDF+meshes) and `uv sync --extra kin` (placo).")
         return 1
 

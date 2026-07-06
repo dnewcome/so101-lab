@@ -56,6 +56,12 @@ URDF_PATH = os.path.expanduser(
 )
 URDF_TARGET_FRAME = _env("SO101_URDF_FRAME", "gripper_frame_link")
 
+# MuJoCo MJCF model (ships alongside the URDF in SO-ARM100/Simulation/SO101).
+# `./fetch_urdf.sh` drops it in ./urdf/ next to the .urdf.
+MJCF_PATH = os.path.expanduser(
+    _env("SO101_MJCF", os.path.join(_HERE, "urdf", "so101_new_calib.xml"))
+)
+
 # The five positioning joints (the gripper is the 6th servo but not a pose DOF).
 ARM_JOINTS = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll"]
 
