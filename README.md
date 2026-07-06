@@ -60,16 +60,34 @@ war-story writeup in [`docs/SO101_BRINGUP.md`](docs/SO101_BRINGUP.md).
 
 ## Experiments (work in progress)
 
+- **`trace_path.py`** — trace a Cartesian toolpath: waypoints → iterated placo
+  IK (`lerobot.model.kinematics`) → joint targets → follower. Dry-run reports
+  tracking error; `--execute` drives the arm. Setup:
+
+  ```bash
+  ./fetch_urdf.sh            # SO-101 URDF + meshes into ./urdf/ (from SO-ARM100)
+  uv sync --extra kin        # placo
+  uv run python trace_path.py            # dry run (demo square, ~0.06 mm)
+  uv run python trace_path.py --execute  # drive the arm
+  ```
+
+  No collision checking yet — this proves the FK/IK/execute loop. The planning
+  landscape (cuRobo, Tesseract/Descartes, MoveIt, …) and the CAD→path→motion
+  pipeline are written up in **[`docs/TOOLPATH_PLANNING.md`](docs/TOOLPATH_PLANNING.md)**.
+
+- **`step_positioning.py`** — read a STEP file (via build123d) and pull out
+  positioning targets: bounding box, and hole/boss centers + axes. Includes a
+  `cad_to_robot()` placeholder for the CAD-frame → robot-base transform you
+  calibrate once per table setup. Feeds waypoints into `trace_path.py`.
+
 - **`multiarm.py`** — a `MultiArm` wrapper that connects several `SOFollower`
   arms and reads/commands them together. The building block for tasks where one
   arm holds a part while another works on it. (lerobot also ships a stock
   `bi_so_follower` bimanual robot if you want the built-in record/train path.)
-- **`step_positioning.py`** — read a STEP file (via build123d) and pull out
-  positioning targets: bounding box, and hole/boss centers + axes. Includes a
-  `cad_to_robot()` placeholder for the CAD-frame → robot-base transform you
-  calibrate once per table setup.
 
-Both are honest starting points, not finished features.
+These are honest starting points, not finished features. **Note the SO-101 is a
+5-DOF arm** — great for position-primary tracing (pen/nozzle/hold), not full
+6-DOF pose control; see the planning doc.
 
 ## Record / train (via lerobot)
 

@@ -46,6 +46,19 @@ ARMS = {
     "follower": {"port": FOLLOWER_PORT, "calib": FOLLOWER_CALIB, "id": FOLLOWER_ID},
 }
 
+# --- Kinematics (URDF for placo-based FK/IK) ----------------------------------
+# The SO-101 URDF + meshes come from TheRobotStudio/SO-ARM100 (Apache-2.0).
+# Run `./fetch_urdf.sh` to populate ./urdf/ (gitignored), or point SO101_URDF at
+# your own copy. `gripper_frame_link` is the end-effector frame lerobot uses.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+URDF_PATH = os.path.expanduser(
+    _env("SO101_URDF", os.path.join(_HERE, "urdf", "so101_new_calib.urdf"))
+)
+URDF_TARGET_FRAME = _env("SO101_URDF_FRAME", "gripper_frame_link")
+
+# The five positioning joints (the gripper is the 6th servo but not a pose DOF).
+ARM_JOINTS = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll"]
+
 # --- SO-101 joint -> Feetech motor map (identical for follower and leader) -----
 SO101_MOTORS = {
     "shoulder_pan": Motor(1, "sts3215", MotorNormMode.RANGE_M100_100),

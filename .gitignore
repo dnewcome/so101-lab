@@ -20,6 +20,9 @@ uv.lock
 scratch/
 tmp/
 
+# fetched third-party assets (SO-101 URDF + meshes; run ./fetch_urdf.sh)
+urdf/
+
 # NOTE: recorded datasets and lerobot calibration live OUTSIDE this repo, under
 # ~/.cache/huggingface/lerobot/ . Datasets belong on the Hugging Face Hub, not
 # in git. Keep them out of here.

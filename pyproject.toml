@@ -17,6 +17,8 @@ dependencies = [
 [project.optional-dependencies]
 # STEP-file reading for step_positioning.py (OpenCascade via build123d).
 step = ["build123d>=0.7"]
+# FK/IK for trace_path.py (placo). Also run ./fetch_urdf.sh for the SO-101 URDF.
+kin = ["placo>=0.9,<1.0"]
 
 [tool.uv]
 # This project is a set of runnable scripts, not an installable package.
