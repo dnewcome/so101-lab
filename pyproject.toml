@@ -1,0 +1,23 @@
+[project]
+name = "so101-lab"
+version = "0.1.0"
+description = "Tools and experiments for SO-101 arms: bring-up, calibration, multi-arm coordination, and STEP-based positioning. Built on lerobot (dependency, not a fork)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Dan Newcome" }]
+dependencies = [
+    # lerobot pinned to the exact commit these tools were developed against.
+    # To use a released lerobot instead, swap this for:
+    #   "lerobot[feetech,dataset,viz]>=0.6.0"
+    "lerobot[feetech,dataset,viz] @ git+https://github.com/huggingface/lerobot.git@73782447f2ca420f8d71c9bd0a169ece5968d2d6",
+    "numpy",
+]
+
+[project.optional-dependencies]
+# STEP-file reading for step_positioning.py (OpenCascade via build123d).
+step = ["build123d>=0.7"]
+
+[tool.uv]
+# This project is a set of runnable scripts, not an installable package.
+package = false

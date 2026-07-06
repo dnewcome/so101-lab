@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# uv
+uv.lock
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# scratch
+*.log
+scratch/
+tmp/
+
+# NOTE: recorded datasets and lerobot calibration live OUTSIDE this repo, under
+# ~/.cache/huggingface/lerobot/ . Datasets belong on the Hugging Face Hub, not
+# in git. Keep them out of here.
