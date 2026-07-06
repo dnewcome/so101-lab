@@ -17,12 +17,15 @@ dependencies = [
 [project.optional-dependencies]
 # STEP-file reading for step_positioning.py (OpenCascade via build123d).
 step = ["build123d>=0.7"]
-# FK/IK for trace_path.py / vr_teleop.py (placo). Also run ./fetch_urdf.sh.
-kin = ["placo>=0.9,<1.0"]
 # MuJoCo sim backend (sim_backend.py, vr_teleop.py). Needs the mjSpec attach API.
 sim = ["mujoco>=3.2"]
-# VR teleop pose source. oculus_reader also needs its APK sideloaded on the Quest;
-# it installs from git:  pip install "oculus_reader @ git+https://github.com/rail-berkeley/oculus_reader.git"
+# NOTE: placo (FK/IK for trace_path.py / vr_teleop.py) is NOT listed here.
+# placo 0.9.16 hard-links liburdfdom_sensor.so.4 (absent on Ubuntu 24.04/25.10),
+# and 0.9.23 (which bundles its own urdfdom) depends on the cmeel pre-release
+# stack that uv's locked resolver refuses. `uv pip install placo==0.9.23`
+# resolves it fine, so `setup.sh` installs it separately after `uv sync`.
+# VR pose source: oculus_reader also needs its APK sideloaded on the Quest;
+# install from git: pip install "oculus_reader @ git+https://github.com/rail-berkeley/oculus_reader.git"
 
 [tool.uv]
 # This project is a set of runnable scripts, not an installable package.

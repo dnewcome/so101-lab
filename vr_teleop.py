@@ -199,7 +199,7 @@ def main() -> int:
         kin = load_kin()
     except Exception as e:
         print(f"kinematics unavailable: {type(e).__name__}: {e}")
-        print("Run ./fetch_urdf.sh and `uv sync --extra kin`.")
+        print("Run ./setup.sh (installs placo + fetches the URDF).")
         return 1
 
     source = MockSource() if args.source == "mock" else OculusSource()

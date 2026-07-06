@@ -22,12 +22,18 @@ experiments I've built around it for my two-arm (leader + follower) SO-101 setup
 
 ## Setup
 
-Uses [uv](https://docs.astral.sh/uv/).
+Uses [uv](https://docs.astral.sh/uv/). Needs Python ≥3.12 (lerobot).
 
 ```bash
-uv sync                 # installs lerobot (feetech+dataset+viz) + deps
-uv sync --extra step    # also install build123d for STEP-file positioning
+uv sync                 # hardware tools only: lerobot (feetech+dataset+viz)
+./setup.sh              # + sim (mujoco) + kinematics (placo) + SO-101 URDF/MJCF
+./setup.sh --step       # ...also build123d for STEP-file positioning
 ```
+
+`setup.sh` installs placo separately (via `uv pip`) on purpose: placo 0.9.16
+fails to import against modern Ubuntu (missing `liburdfdom_sensor.so.4`), and
+0.9.23's cmeel pre-release deps confuse uv's locked resolver — `uv pip` handles
+it. Re-run `setup.sh` if a later `uv sync` ever prunes placo.
 
 Then edit **`so101_config.py`** — set your two board `by-id` serials and your
 lerobot calibration ids (or set the `SO101_LEADER_PORT` / `SO101_FOLLOWER_PORT`
@@ -65,8 +71,7 @@ war-story writeup in [`docs/SO101_BRINGUP.md`](docs/SO101_BRINGUP.md).
   tracking error; `--execute` drives the arm. Setup:
 
   ```bash
-  ./fetch_urdf.sh            # SO-101 URDF + meshes into ./urdf/ (from SO-ARM100)
-  uv sync --extra kin        # placo
+  ./setup.sh                             # sync + placo + fetch URDF (one time)
   uv run python trace_path.py            # dry run (demo square, ~0.06 mm)
   uv run python trace_path.py --execute  # drive the arm
   ```
@@ -87,7 +92,7 @@ war-story writeup in [`docs/SO101_BRINGUP.md`](docs/SO101_BRINGUP.md).
   are one-line swaps. Develop with no headset via the mock source:
 
   ```bash
-  uv sync --extra kin --extra sim
+  ./setup.sh                              # sync + placo + fetch URDF/MJCF (one time)
   uv run python sim_backend.py            # self-test: both arms track IK
   uv run python vr_teleop.py --iters 240  # mock controllers drive both sim arms
   uv run python vr_teleop.py --view       # MuJoCo viewer

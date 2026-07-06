@@ -26,8 +26,7 @@ The SO-101 is 5-DOF, so control is **position-primary** (tool may tilt).
 ## Run it
 
 ```bash
-./fetch_urdf.sh                     # SO-101 URDF + MJCF + meshes -> ./urdf/
-uv sync --extra kin --extra sim     # placo + mujoco
+./setup.sh                          # uv sync (lerobot+mujoco) + placo + URDF/MJCF
 
 uv run python sim_backend.py            # self-test: both arms track IK (~0.04 deg)
 uv run python vr_teleop.py --iters 240  # mock controllers drive both sim arms

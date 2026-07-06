@@ -4,8 +4,7 @@ Used by both `trace_path.py` (toolpaths) and `vr_teleop.py` (VR teleop) so the
 sim and hardware paths share one IK. `lerobot.model.kinematics.RobotKinematics`
 runs a single differential IK step per call, so we iterate it here.
 
-    ./fetch_urdf.sh          # SO-101 URDF + meshes
-    uv sync --extra kin      # placo
+    ./setup.sh               # installs placo + fetches the SO-101 URDF
 """
 
 import numpy as np

@@ -15,8 +15,7 @@ placo IK is local and geometry-unaware. Interference-free planning
 docs/TOOLPATH_PLANNING.md.
 
 Prereqs:
-    ./fetch_urdf.sh                 # SO-101 URDF + meshes into ./urdf/
-    uv sync --extra kin             # placo
+    ./setup.sh                      # installs placo + fetches the SO-101 URDF
 
 Notes / caveats:
 - The SO-101 is a 5-DOF arm. It cannot hold an arbitrary tool orientation
@@ -166,7 +165,7 @@ def main() -> int:
         kin = load_kin()
     except Exception as e:
         print(f"Could not load kinematics: {type(e).__name__}: {e}")
-        print("Run ./fetch_urdf.sh (URDF+meshes) and `uv sync --extra kin` (placo).")
+        print("Run ./setup.sh (installs placo + fetches the URDF).")
         return 1
 
     poses, _ = make_path(kin, args.shape, args.size, args.points)
