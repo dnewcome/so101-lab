@@ -11,7 +11,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-EXTRAS=(--extra sim)
+EXTRAS=(--extra sim --extra phone)
 [[ "${1:-}" == "--step" ]] && EXTRAS+=(--extra step)
 
 echo "==> uv sync ${EXTRAS[*]}  (builds lerobot from git; slow first time)"

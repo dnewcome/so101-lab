@@ -100,6 +100,13 @@ war-story writeup in [`docs/SO101_BRINGUP.md`](docs/SO101_BRINGUP.md).
 
   Full writeup + Quest sideload + hardware steps: **[`docs/VR_TELEOP.md`](docs/VR_TELEOP.md)**.
 
+- **`phone_teleop/`** — the **native lerobot learning loop** from a pose
+  controller: phone **or the Quest 2 browser** (WebXR) → EE control → record a
+  `LeRobotDataset` → `replay.py` → `lerobot-train` → evaluate. Single arm, no
+  APK sideload. This is the fastest path to training on VR-collected data;
+  bimanual (`vr_teleop.py`) is the follow-on. See
+  [`phone_teleop/README.md`](phone_teleop/README.md).
+
 - **`ik.py`** — shared placo FK/IK (iterated to convergence), used by both
   `trace_path.py` and `vr_teleop.py` so sim and hardware use one solver.
 
