@@ -15,7 +15,22 @@ fetched URDF, MJPG camera, local dataset by default.
 ./setup.sh          # installs the `phone` (WebXR) extra + placo + URDF
 ```
 
-## 1. Teleoperate (dial it in)
+## 0. Try it in SIM first (no hardware follower)
+
+Drive a **MuJoCo** SO-101 with the phone/Quest — same lerobot pipeline, no
+serial arm. Great for dialing in the WebXR loop safely.
+
+```bash
+uv run python phone_teleop/teleoperate_sim.py       # opens a MuJoCo window
+uv run python phone_teleop/sim_robot.py --view      # sanity-check the sim arm (no phone)
+```
+
+`sim_robot.py` is a tiny MuJoCo "robot" that quacks like `SOFollower`
+(`get_observation`/`send_action`), so `teleoperate_sim.py` runs the *exact* EE
+pipeline — verified: a controller offset moves the sim EE 1:1. Once it feels
+right in sim, use the hardware script below.
+
+## 1. Teleoperate on hardware (dial it in)
 
 ```bash
 uv run python phone_teleop/teleoperate.py
