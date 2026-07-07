@@ -61,6 +61,11 @@ URDF_TARGET_FRAME = _env("SO101_URDF_FRAME", "gripper_frame_link")
 MJCF_PATH = os.path.expanduser(
     _env("SO101_MJCF", os.path.join(_HERE, "urdf", "so101_new_calib.xml"))
 )
+# scene.xml wraps the model with lights + floor + camera (nice for rendering);
+# it `<include>`s the bare model, so it keeps the same joints/actuators.
+MJCF_SCENE = os.path.expanduser(
+    _env("SO101_MJCF_SCENE", os.path.join(_HERE, "urdf", "scene.xml"))
+)
 
 # The five positioning joints (the gripper is the 6th servo but not a pose DOF).
 ARM_JOINTS = ["shoulder_pan", "shoulder_lift", "elbow_flex", "wrist_flex", "wrist_roll"]

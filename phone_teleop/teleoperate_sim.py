@@ -5,8 +5,8 @@ Same lerobot phone pipeline as teleoperate.py -- only the robot is swapped for a
 MuJoCo `SimRobot`, so you can dial in the WebXR loop with NO hardware follower.
 You still need the phone/Quest for the pose input; the arm you drive is virtual.
 
-    uv run python phone_teleop/teleoperate_sim.py           # opens a MuJoCo window
-    uv run python phone_teleop/teleoperate_sim.py --no-view  # headless
+    uv run python phone_teleop/teleoperate_sim.py           # arm rendered INTO Rerun
+    uv run python phone_teleop/teleoperate_sim.py --glfw     # also open a MuJoCo window
 
 Open the printed URL in the Quest browser, tap Start, hold Move to drive.
 """
@@ -39,6 +39,8 @@ from lerobot.types import RobotAction, RobotObservation
 from lerobot.utils.robot_utils import precise_sleep
 from lerobot.utils.visualization_utils import init_rerun, log_rerun_data
 
+import rerun as rr
+
 from sim_robot import SimRobot
 from so101_config import URDF_PATH, URDF_TARGET_FRAME
 
@@ -46,8 +48,7 @@ FPS = 30
 
 
 def main():
-    view = "--no-view" not in sys.argv
-    robot = SimRobot(view=view)
+    robot = SimRobot(view="--glfw" in sys.argv, render=True)
     teleop_config = PhoneConfig(phone_os=PhoneOS.ANDROID)  # WebXR (Quest browser)
     teleop_device = Phone(teleop_config)
 
@@ -102,6 +103,9 @@ def main():
             joint_action = phone_to_robot_joints_processor((phone_obs, robot_obs))
             robot.send_action(joint_action)
             log_rerun_data(observation=phone_obs, action=joint_action)
+            frame = robot.frame()
+            if frame is not None:
+                rr.log("sim/view", rr.Image(frame))
             precise_sleep(max(1.0 / FPS - (time.perf_counter() - t0), 0.0))
     finally:
         robot.disconnect()

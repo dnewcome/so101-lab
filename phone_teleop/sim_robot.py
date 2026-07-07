@@ -22,7 +22,7 @@ except ImportError:
     mujoco = None
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from so101_config import MJCF_PATH, SO101_MOTORS  # noqa: E402
+from so101_config import MJCF_SCENE, SO101_MOTORS  # noqa: E402
 
 JOINT_ORDER = list(SO101_MOTORS.keys())  # shoulder_pan..gripper (URDF/MJCF order)
 SEED_DEG = np.array([0.0, -35.0, 45.0, -10.0, 0.0, 0.0])
@@ -31,11 +31,16 @@ SEED_DEG = np.array([0.0, -35.0, 45.0, -10.0, 0.0, 0.0])
 class SimRobot:
     name = "so101_follower_sim"
 
-    def __init__(self, mjcf: str = MJCF_PATH, view: bool = False, settle_steps: int = 400):
+    def __init__(self, mjcf: str = MJCF_SCENE, view: bool = False, render: bool = False,
+                 settle_steps: int = 400, res=(480, 640)):
         if mujoco is None:
             raise ImportError("mujoco not installed. Run: uv sync --extra sim")
         self.model = mujoco.MjModel.from_xml_path(mjcf)
         self.data = mujoco.MjData(self.model)
+        self._render = render
+        self._res = res
+        self.renderer = None
+        self._cam = None
         # motors dict — order is what the pipeline uses for joint_names + IK output
         self.bus = SimpleNamespace(motors=OrderedDict((j, None) for j in JOINT_ORDER))
         self._act = {j: mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, j) for j in JOINT_ORDER}
@@ -55,7 +60,20 @@ class SimRobot:
         if self._view:
             import mujoco.viewer as _mjviewer  # aliased so it doesn't shadow global `mujoco`
             self.viewer = _mjviewer.launch_passive(self.model, self.data)
+        if self._render:
+            os.environ.setdefault("MUJOCO_GL", "egl")  # headless offscreen GL
+            self.renderer = mujoco.Renderer(self.model, self._res[0], self._res[1])
+            self._cam = mujoco.MjvCamera()
+            self._cam.distance, self._cam.azimuth, self._cam.elevation = 0.9, 130, -20
+            self._cam.lookat[:] = [0.15, 0.0, 0.15]
         self._connected = True
+
+    def frame(self):
+        """Offscreen RGB render of the current scene (or None if render=False)."""
+        if self.renderer is None:
+            return None
+        self.renderer.update_scene(self.data, self._cam)
+        return self.renderer.render()
 
     @property
     def is_connected(self) -> bool:

@@ -21,9 +21,12 @@ Drive a **MuJoCo** SO-101 with the phone/Quest — same lerobot pipeline, no
 serial arm. Great for dialing in the WebXR loop safely.
 
 ```bash
-uv run python phone_teleop/teleoperate_sim.py       # opens a MuJoCo window
-uv run python phone_teleop/sim_robot.py --view      # sanity-check the sim arm (no phone)
+uv run python phone_teleop/teleoperate_sim.py       # arm rendered INTO Rerun (+ traces)
+uv run python phone_teleop/teleoperate_sim.py --glfw # also open a native MuJoCo window
 ```
+
+The sim arm shows up in the **Rerun** viewer as `sim/view` alongside the joint
+traces (rendered offscreen via EGL — portable, no GLFW window needed).
 
 `sim_robot.py` is a tiny MuJoCo "robot" that quacks like `SOFollower`
 (`get_observation`/`send_action`), so `teleoperate_sim.py` runs the *exact* EE
