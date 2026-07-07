@@ -15,6 +15,32 @@ fetched URDF, MJPG camera, local dataset by default.
 ./setup.sh          # installs the `phone` (WebXR) extra + placo + URDF
 ```
 
+## Quest 2 controls (confirmed working)
+
+The `teleop` web app opens an **`immersive-ar`** (passthrough) WebXR session and
+tracks the **right controller** in 6-DOF — it's meant to be **worn**:
+
+1. Open the printed `https://<ip>:4443` URL in the **Quest browser**, accept the
+   cert, click **Start** to enter immersive AR, and **put the headset on** (you
+   see your room via passthrough).
+2. Right-controller mapping (read straight from the app):
+
+   | Control | Does |
+   |---|---|
+   | **Grip / squeeze (side)** | **"Move" — the clutch. HOLD it to drive.** |
+   | A / B buttons | gripper open / close |
+   | Trigger | toggles a gripper state (JS-side; largely a no-op for us) |
+   | Thumbstick ←/→ | motion **scale / sensitivity** |
+
+**Tracking tips:** engage with the **grip**, held *steadily* — the clutch
+re-latches its reference every time "Move" flickers, which zeroes your motion.
+**Wear the headset** (don't leave it on a stand) so the controller stays in the
+cameras' view; that's what fixes intermittent tracking loss.
+
+> Worn, you can't see the PC screen — so for **sim** dial-in, watch `sim/view`
+> in Rerun (stand-mount or glance at the monitor). For the **real arm**, wearing
+> it is ideal: passthrough AR lets you look at the actual SO-101 while you drive.
+
 ## 0. Try it in SIM first (no hardware follower)
 
 Drive a **MuJoCo** SO-101 with the phone/Quest — same lerobot pipeline, no

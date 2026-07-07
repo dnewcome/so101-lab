@@ -1,13 +1,20 @@
 # so101-lab
 
 Tools and experiments for [SO-101](https://github.com/TheRobotStudio/SO-ARM100)
-robot arms — motor ID assignment, calibration fixes, keyboard teleop, and
-in-progress work on **multi-arm coordination** and **STEP-file-driven
-positioning**.
+robot arms:
+
+- **Bring-up & calibration** — motor IDs, single-joint range re-mapping, gripper fixes
+- **VR / phone teleop** — drive the arm's end-effector from a **Quest 2** (WebXR,
+  no APK) or a phone, into a full lerobot **record → replay → train** loop
+- **Simulation** — the SO-101 in MuJoCo (single and bimanual), sharing one IK
+  with the hardware path
+- **Toolpath tracing** — Cartesian waypoints → IK → arm (CAD/STEP-driven, WIP)
 
 Built **on top of [lerobot](https://github.com/huggingface/lerobot)** — lerobot
-is a dependency here, not a fork. This repo is just the layer of scripts and
-experiments I've built around it for my two-arm (leader + follower) SO-101 setup.
+is a dependency here, not a fork. This is the layer of scripts and experiments
+around it for my two-arm (leader + follower) SO-101 setup.
+
+**Status & what's next:** [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Hardware
 
@@ -100,12 +107,13 @@ war-story writeup in [`docs/SO101_BRINGUP.md`](docs/SO101_BRINGUP.md).
 
   Full writeup + Quest sideload + hardware steps: **[`docs/VR_TELEOP.md`](docs/VR_TELEOP.md)**.
 
-- **`phone_teleop/`** — the **native lerobot learning loop** from a pose
-  controller: phone **or the Quest 2 browser** (WebXR) → EE control → record a
-  `LeRobotDataset` → `replay.py` → `lerobot-train` → evaluate. Single arm, no
-  APK sideload. This is the fastest path to training on VR-collected data;
-  bimanual (`vr_teleop.py`) is the follow-on. See
-  [`phone_teleop/README.md`](phone_teleop/README.md).
+- **`phone_teleop/`** ✅ **working** — the **native lerobot learning loop** from
+  a pose controller: **Quest 2 browser (WebXR, no APK)** or a phone → EE control
+  → record a `LeRobotDataset` → `replay.py` → `lerobot-train` → evaluate. The
+  Quest works via an `immersive-ar` session (grip = Move, A/B = gripper);
+  `teleoperate_sim.py` drives a MuJoCo arm (rendered into Rerun) so you can dial
+  it in with **no hardware**. Single arm — bimanual (`vr_teleop.py`) is the
+  follow-on. See [`phone_teleop/README.md`](phone_teleop/README.md).
 
 - **`ik.py`** — shared placo FK/IK (iterated to convergence), used by both
   `trace_path.py` and `vr_teleop.py` so sim and hardware use one solver.
