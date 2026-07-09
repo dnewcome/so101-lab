@@ -37,6 +37,9 @@ uv sync                 # hardware tools only: lerobot (feetech+dataset+viz)
 ./setup.sh --step       # ...also build123d for STEP-file positioning
 ```
 
+Common runs have `make` shortcuts — `make` (or `make help`) lists them
+(e.g. `make vr-teleop`, `make vr-teleop-smoke`). Pass flags with `ARGS="…"`.
+
 `setup.sh` installs placo separately (via `uv pip`) on purpose: placo 0.9.16
 fails to import against modern Ubuntu (missing `liburdfdom_sensor.so.4`), and
 0.9.23's cmeel pre-release deps confuse uv's locked resolver — `uv pip` handles
@@ -132,6 +135,10 @@ Recording demos and training policies use lerobot's own CLIs
 (`lerobot-record`, `lerobot-train`, `lerobot-replay`). Datasets go to the
 **Hugging Face Hub**, not this repo. See `docs/SO101_BRINGUP.md` for the
 working record command (camera config, MJPG, stable ports).
+
+This is **imitation learning** (behavioral cloning — ACT/diffusion), **not RL**.
+For why that is, and why the simulator is MuJoCo rather than NVIDIA Isaac or
+Gazebo, see **[`docs/LEARNING_AND_SIM.md`](docs/LEARNING_AND_SIM.md)**.
 
 ## License
 

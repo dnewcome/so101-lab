@@ -2,6 +2,10 @@
 
 Status of the moving pieces and what's next. Checked = working; unchecked = to do.
 
+> **Approach note:** we train by **imitation** (ACT/diffusion), not RL, and sim
+> is **MuJoCo** (not Isaac/Gazebo). The reasoning + when-to-revisit triggers are
+> in [`LEARNING_AND_SIM.md`](LEARNING_AND_SIM.md).
+
 ## Done / working
 
 - [x] **Bring-up + calibration** of both SO-101 arms (motor IDs, per-joint range
@@ -36,6 +40,11 @@ Status of the moving pieces and what's next. Checked = working; unchecked = to d
 - [ ] **`oculus_reader` path**: native Quest 6-DOF for *both* controllers,
       feeding `vr_teleop.py` `OculusSource`. More stable than WebXR and gives two
       independent hands.
+  - [x] **Tuning + instrumentation in place** for judging the feel: `--axis-map`
+        (Quest→base frame remap), `--pos-scale` (delta gain), and `--rerun`
+        (per-hand latency `compute_ms`, `track_err_mm`, commanded-vs-achieved EE).
+        See [`VR_TELEOP.md`](VR_TELEOP.md) "Tuning & measuring the feel". Next:
+        put the headset on and tune the axis map + scale against the Rerun plots.
 - [ ] **Second follower arm** (or repurpose the leader) for real bimanual.
 - [ ] **Bimanual record → train** (`bi_so_follower`, or a direct `LeRobotDataset`
       writer from the `vr_teleop` loop).
